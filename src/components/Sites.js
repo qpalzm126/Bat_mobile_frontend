@@ -1,12 +1,12 @@
 import React, { useId, useState, useContext } from "react";
-import { flushSync } from "react-dom";
 import Image from "next/image";
-import { AsyncSelect } from "react-select/async";
+import AsyncSelect from "react-select/async";
 import Select, { components } from "react-select";
-import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
+import searchSiteSelectStyles from "../styles/SearchSiteSelectStyles";
 import bikePic from "../assets/bike.png";
 import searchIcon from "../assets/search_24px.png";
-import arrowIcon from "../assets/icon.svg";
+import blackArrowIcon from "../assets/Black_arrow_icon.png";
+import grayArrowIcon from "../assets/Gray_arrow_icon.png";
 import SiteContext from "./SiteContext";
 
 function Sites({ options }) {
@@ -49,15 +49,15 @@ function Sites({ options }) {
     const [districtList, setDistrictList] = useState([]);
     const [checked, setChecked] = useState(districtList);
 
-    // const loadOptions = (searchValue, callback) => {
-    //     setTimeout(() => {
-    //         const filterOptions = options.filter(( option) =>
-    //             option.label.toLowerCase().includes(searchValue.toLowerCase())
-    //         );
-    //         console.log("loadOptions", searchValue, filterOptions);
-    //         callback(filterOptions);
-    //     }, 0);
-    // };
+    const loadOptions = (searchValue, callback) => {
+        setTimeout(() => {
+            const filterOptions = options.filter((option) =>
+                option.label.toLowerCase().includes(searchValue.toLowerCase())
+            );
+            // console.log("loadOptions", searchValue, filterOptions);
+            callback(filterOptions);
+        }, 0);
+    };
     const sareaOptions = Object.keys(cities).map((city) => ({
         value: city,
         label: city,
@@ -74,7 +74,7 @@ function Sites({ options }) {
     const customStyles = {
         option: (defaultStyles, state) => ({
             ...defaultStyles,
-            color: state.isSelected ? "#B5CC22" : "#323232",
+            // color: state.isFocused ? "#B5CC22" : "#323232", #第一欄會自動focused
             backgroundColor: state.isSelected ? "#F3F3F3" : "#F3F3F3",
             "&:hover": {
                 color: "#B5CC22",
@@ -125,10 +125,23 @@ function Sites({ options }) {
             padding: 0,
         }),
     };
-    const DropdownIndicator = (props) => {
+    const DropdownIndicatorSearchIcon = (props) => {
         return (
             <components.DropdownIndicator {...props}>
-                <Image src={arrowIcon} alt="arrow" className="pl-0 mr-2" />
+                <Image src={searchIcon} alt="arrow" className="pl-0 mr-2" />
+            </components.DropdownIndicator>
+        );
+    };
+
+    const DropdownIndicatorArrow = (props, state) => {
+        console.log({ ...props });
+        return (
+            <components.DropdownIndicator {...props}>
+                <Image
+                    src={state.isSelected ? blackArrowIcon : grayArrowIcon}
+                    alt="arrow"
+                    className="pl-0 mr-2"
+                />
             </components.DropdownIndicator>
         );
     };
@@ -148,7 +161,6 @@ function Sites({ options }) {
         }
     };
 
-    // console.log(checked);
     return (
         <>
             <div className="grid min-[1141px]:grid-cols-2 px-8 md:px-[124px] mb-6">
@@ -167,12 +179,13 @@ function Sites({ options }) {
                                 isClearable
                                 className="relative bg-[#F6F6F6] "
                                 styles={customStyles}
-                                components={{ DropdownIndicator }}
+                                components={{
+                                    DropdownIndicator: DropdownIndicatorArrow,
+                                }}
                                 onChange={(e) => {
                                     if (e) {
                                         setDistrictList(cities[e["value"]]);
                                         setChecked(cities[e["value"]]);
-                                        console.log("!!" + checked);
                                     } else {
                                         setDistrictList([]);
                                     }
@@ -180,10 +193,29 @@ function Sites({ options }) {
                             />
                         </div>
                         <div
-                            className="relative flex justify-between bg-[#F6F6F6] border-[#000000] sm:border-[1px] border-solid box-border  
+                            className="relative bg-[#F6F6F6] border-[#000000] sm:border-[1px] border-solid box-border  
                         rounded-[8px] max-sm:mt-2 w-[311px] md:w-[277px] h-[40px]"
                         >
-                            <input
+                            <AsyncSelect
+                                loadOptions={loadOptions}
+                                instanceId={useId()}
+                                styles={searchSiteSelectStyles}
+                                components={{
+                                    DropdownIndicator:
+                                        DropdownIndicatorSearchIcon,
+                                }}
+                                defaultOptions
+                                isClearable
+                                placeholder="搜尋站點"
+                                onChange={(e) => {
+                                    if (e) {
+                                        ctx.setSearchSiteInput(e["value"]);
+                                    } else {
+                                        ctx.setSearchSiteInput("");
+                                    }
+                                }}
+                            />
+                            {/* <input
                                 type="search"
                                 className="relative flex flex-grow bg-transparent outline-none focus:outline-none shadow-none 
                                 focus:shadow-none px-2 border-none rounded-[8px] bg-[#F6F6F6] 
@@ -200,7 +232,7 @@ function Sites({ options }) {
                                 width={18}
                                 height={18}
                                 className=" m-[11px] mr-[16px]"
-                            />
+                            /> */}
                         </div>
                     </div>
                     <div>

@@ -35,7 +35,7 @@ function Header() {
                             : "hover:text-[#B5CC22] cursor-pointer transition transform duration-150 ease-out "
                     }
                     onClick={() => {
-                        router.push("/instruction");
+                        router.push("/");
                         setExtendBar(false);
                     }}
                 >
@@ -48,7 +48,7 @@ function Header() {
                             : "hover:text-[#B5CC22] cursor-pointer transition transform duration-150 ease-out "
                     }
                     onClick={() => {
-                        router.push("/payment");
+                        router.push("/");
                         setExtendBar(false);
                     }}
                 >
@@ -74,7 +74,7 @@ function Header() {
                             : "hover:text-[#B5CC22] cursor-pointer transition transform duration-150 ease-out "
                     }
                     onClick={() => {
-                        router.push("/news");
+                        router.push("/");
                         setExtendBar(false);
                     }}
                 >
@@ -87,7 +87,7 @@ function Header() {
                             : "hover:text-[#B5CC22] cursor-pointer transition transform duration-150 ease-out "
                     }
                     onClick={() => {
-                        router.push("/activities");
+                        router.push("/");
                         setExtendBar(false);
                     }}
                 >

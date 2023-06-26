@@ -7,8 +7,6 @@ import { useState } from "react";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home({ siteData }) {
-    const [searchSite, setSearchSite] = useState("");
-
     const arData = siteData.map(({ ar }) => {
         return { value: ar, label: ar };
     });
